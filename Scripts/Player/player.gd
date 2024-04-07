@@ -8,7 +8,7 @@ var gravity = 9.8
 
 @onready var animation_player = $Visuals/player/AnimationPlayer
 @onready var visuals = $Visuals
-@onready var camera = $Camera_pivot
+@onready var camera = $Camera_rig
 
 var walking = false
 var running = false
@@ -20,6 +20,7 @@ func _physics_process(delta):
 
 	# Handle jump.
 	if Input.is_action_just_pressed("space") and is_on_floor():
+		animation_player.play("jump")
 		velocity.y = JUMP_VELOCITY
 
 	# Use the camera's global transform to determine the forward and right vectors.
@@ -28,10 +29,10 @@ func _physics_process(delta):
 	
 	# Get the input vector based on camera orientation.
 	var input_vec = Vector3.ZERO
-	input_vec += forward if Input.is_action_pressed("w") else Vector3.ZERO
-	input_vec -= forward if Input.is_action_pressed("s") else Vector3.ZERO
-	input_vec -= right if Input.is_action_pressed("a") else Vector3.ZERO
-	input_vec += right if Input.is_action_pressed("d") else Vector3.ZERO
+	input_vec += forward if Input.is_action_pressed("s") else Vector3.ZERO
+	input_vec -= forward if Input.is_action_pressed("w") else Vector3.ZERO
+	input_vec -= right if Input.is_action_pressed("d") else Vector3.ZERO
+	input_vec += right if Input.is_action_pressed("a") else Vector3.ZERO
 	var direction = input_vec.normalized()
 
 	# Determine current speed based on whether the player is walking or running.
