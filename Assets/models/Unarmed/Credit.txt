@@ -1,0 +1,6 @@
+Model:
+	Animated Character Base by J-Toastie [CC-BY] via Poly Pizza
+	https://poly.pizza/m/AZzoJo1FBm
+
+Animations:
+	Mixamo

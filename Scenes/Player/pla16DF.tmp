@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://ygywbckgaiu8"]
+
+[ext_resource type="Script" path="res://Scripts/Player/player.gd" id="1_xbhth"]
+[ext_resource type="Script" path="res://Scripts/Player/Camera/Camera_pivot.gd" id="2_4ashw"]
+[ext_resource type="Script" path="res://Scripts/Player/Camera/Camera3D_texel_snapped.gd" id="3_xwck7"]
+[ext_resource type="Shader" path="res://Shaders/outline.gdshader" id="4_q4xm1"]
+[ext_resource type="PackedScene" uid="uid://dymm5grscri7h" path="res://Assets/models/Unarmed/Idle.gltf" id="5_m0j2r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_58eqs"]
+render_priority = 0
+shader = ExtResource("4_q4xm1")
+shader_parameter/depth_threshold = 0.05
+shader_parameter/reverse_depth_threshold = 0.25
+shader_parameter/normal_threshold = 0.6
+shader_parameter/darken_amount = 0.3
+shader_parameter/lighten_amount = 1.5
+shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
+shader_parameter/light_direction = Vector3(-0.96, -0.18, 0.2)
+
+[sub_resource type="QuadMesh" id="QuadMesh_c5x4t"]
+material = SubResource("ShaderMaterial_58eqs")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w3utp"]
+radius = 0.25476
+height = 1.74969
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+transform = Transform3D(-1, 0, -2.62268e-07, 0, 1, 0, 2.62268e-07, 0, -1, 0, 0, 0)
+script = ExtResource("1_xbhth")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(853, 480)
+render_target_update_mode = 4
+
+[node name="Camera_rig" type="Node3D" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("player")]
+transform = Transform3D(-1, 1.85452e-07, -1.85452e-07, 0, 0.707107, 0.707107, 2.62268e-07, 0.707107, -0.707107, 0, 1, 0)
+script = ExtResource("2_4ashw")
+player = NodePath("../../..")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Camera_rig"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
+projection = 1
+current = true
+size = 10.0
+far = 100.0
+script = ExtResource("3_xwck7")
+snap = false
+
+[node name="PostProcessing" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Camera_rig/Camera3D"]
+mesh = SubResource("QuadMesh_c5x4t")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.901361, 0)
+shape = SubResource("CapsuleShape3D_w3utp")
+
+[node name="Visuals" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 2.62268e-07, 0, 1, 0, -2.62268e-07, 0, -1, 0, 0, 0)
+
+[node name="Idle" parent="Visuals" instance=ExtResource("5_m0j2r")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)

@@ -8,20 +8,27 @@ var gravity = 9.8
 
 @onready var animation_player = $Visuals/player/AnimationPlayer
 @onready var visuals = $Visuals
-@onready var camera = $Camera_rig
+@onready var camera = $SubViewportContainer/SubViewport/Camera_rig
 
 var walking = false
 var running = false
+
+func _ready():
+	#animation_player.set_blend_time("Idle", "Walk", 0.1)
+	#animation_player.set_blend_time("Walk", "Idle", 0.1)
+	#animation_player.set_blend_time("Run", "Walk", 0.1)
+	#animation_player.set_blend_time("Walk", "Idle", 0.1)
+	pass
 
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-
 	# Handle jump.
-	if Input.is_action_just_pressed("space") and is_on_floor():
-		animation_player.play("jump")
+	if Input.is_action_just_pressed("space") and is_on_floor:
 		velocity.y = JUMP_VELOCITY
+		animation_player.play("Jump")
+		
 
 	# Use the camera's global transform to determine the forward and right vectors.
 	var forward = -camera.global_transform.basis.z.normalized()
@@ -43,16 +50,16 @@ func _physics_process(delta):
 		if !running and current_speed == RUN_SPEED:
 			running = true
 			walking = false
-			animation_player.play("run")
+			animation_player.play("Run")
 		elif !walking and current_speed == WALK_SPEED:
 			walking = true
 			running = false
-			animation_player.play("walk")
+			animation_player.play("Walk")
 	else:
 		if walking or running:
 			walking = false
 			running = false
-			animation_player.play("idle")
+			animation_player.play("Idle")
 
 	# Apply movement
 	if direction != Vector3.ZERO:

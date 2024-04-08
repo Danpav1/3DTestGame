@@ -1,10 +1,20 @@
 extends Node3D
 
-var mouse_sensitivity: float = 0.5  # Sensitivity of the mouse movement
-var is_rotating: bool = false  # Flag to track if currently rotating
-var snap_target_angle: float = 0.0  # Target angle for snapping
-var snap_speed: float = 5.0  # Speed of snapping rotation
-var follow_speed: float = 5.0  # Speed of following the player
+@export var player: CharacterBody3D
+
+# Offsets
+var position_offset: Vector3 = Vector3(0, 1, 0)  # The camera is 1 unit above the player
+
+var mouse_sensitivity: float = 0.5
+var is_rotating: bool = false
+var snap_target_angle: float = 0.0
+var snap_speed: float = 5.0
+var follow_speed: float = 5.0
+
+func _ready() -> void:
+	if not player:
+		print("Player node not set or found. Please assign the Player node to the camera rig script.")
+		set_physics_process(false)  # Disable _process until the player is set to avoid errors
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_rotating:
@@ -27,3 +37,12 @@ func _process(delta: float) -> void:
 		# Smoothly interpolate towards the snap target angle when not rotating
 		rotation_degrees.y = lerp_angle(deg_to_rad(rotation_degrees.y), deg_to_rad(snap_target_angle), snap_speed * delta)
 		rotation_degrees.y = rad_to_deg(rotation_degrees.y)
+		
+	# Follow the player with an offset
+	if player:
+		# Calculate the camera global position based on the player's position and the offsets
+		var rotated_offset: Vector3 = player.global_transform.basis * position_offset
+		var target_position: Vector3 = player.global_transform.origin + rotated_offset
+
+		# Lerp the camera's position for smooth following
+		global_transform.origin = global_transform.origin.lerp(target_position, follow_speed * delta)
