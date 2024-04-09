@@ -4,11 +4,6 @@ extends Node3D
 
 # Offsets
 var position_offset: Vector3 = Vector3(0, 1, 0)  # The camera is 1 unit above the player
-
-var mouse_sensitivity: float = 0.5
-var is_rotating: bool = false
-var snap_target_angle: float = 0.0
-var snap_speed: float = 5.0
 var follow_speed: float = 5.0
 
 func _ready() -> void:
@@ -16,28 +11,7 @@ func _ready() -> void:
 		print("Player node not set or found. Please assign the Player node to the camera rig script.")
 		set_physics_process(false)  # Disable _process until the player is set to avoid errors
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and is_rotating:
-		# Update rotation based on mouse movement
-		rotation_degrees.y += event.relative.x * mouse_sensitivity
-		# Update snap target angle to current angle to avoid snapping while rotating
-		snap_target_angle = rotation_degrees.y
-
-	elif event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				is_rotating = true  # Start rotating
-			else:
-				is_rotating = false  # Stop rotating
-				# Set snap target to the nearest 45 degree increment
-				snap_target_angle = round(rotation_degrees.y / 45.0) * 45.0
-
 func _process(delta: float) -> void:
-	if not is_rotating:
-		# Smoothly interpolate towards the snap target angle when not rotating
-		rotation_degrees.y = lerp_angle(deg_to_rad(rotation_degrees.y), deg_to_rad(snap_target_angle), snap_speed * delta)
-		rotation_degrees.y = rad_to_deg(rotation_degrees.y)
-		
 	# Follow the player with an offset
 	if player:
 		# Calculate the camera global position based on the player's position and the offsets

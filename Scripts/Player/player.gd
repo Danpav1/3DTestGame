@@ -5,6 +5,8 @@ const RUN_SPEED = 6.0
 const JUMP_VELOCITY = 4.5
 
 var gravity = 9.8
+var current_direction = Vector3.ZERO  # Initial direction is zero
+
 
 @onready var animation_player = $Visuals/player/AnimationPlayer
 @onready var visuals = $Visuals
@@ -14,72 +16,62 @@ var walking = false
 var running = false
 
 func _ready():
-	#animation_player.set_blend_time("Idle", "Walk", 0.1)
-	#animation_player.set_blend_time("Walk", "Idle", 0.1)
-	#animation_player.set_blend_time("Run", "Walk", 0.1)
-	#animation_player.set_blend_time("Walk", "Idle", 0.1)
 	pass
 
 func _physics_process(delta):
-	# Add the gravity.
+	# Gravity application
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-	# Handle jump.
-	if Input.is_action_just_pressed("space") and is_on_floor:
+	else:
+		velocity.y = 0  # Reset Y velocity when on the floor
+
+	# Jump handling
+	if Input.is_action_just_pressed("space") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		animation_player.play("Jump")
-		
 
-	# Use the camera's global transform to determine the forward and right vectors.
-	var forward = -camera.global_transform.basis.z.normalized()
+	# Determine the input direction based on camera orientation and player input
+	var forward = camera.global_transform.basis.z.normalized()
 	var right = camera.global_transform.basis.x.normalized()
-	
-	# Get the input vector based on camera orientation.
 	var input_vec = Vector3.ZERO
-	input_vec += forward if Input.is_action_pressed("s") else Vector3.ZERO
-	input_vec -= forward if Input.is_action_pressed("w") else Vector3.ZERO
-	input_vec -= right if Input.is_action_pressed("d") else Vector3.ZERO
-	input_vec += right if Input.is_action_pressed("a") else Vector3.ZERO
+	input_vec -= forward if Input.is_action_pressed("w") else Vector3.ZERO  # Forward
+	input_vec += forward if Input.is_action_pressed("s") else Vector3.ZERO  # Backward
+	input_vec -= right if Input.is_action_pressed("a") else Vector3.ZERO  # Left
+	input_vec += right if Input.is_action_pressed("d") else Vector3.ZERO  # Right
 	var direction = input_vec.normalized()
 
-	# Determine current speed based on whether the player is walking or running.
-	var current_speed = WALK_SPEED if !Input.is_action_pressed("shift") else RUN_SPEED
+	# Smoothly interpolate current_direction towards the new input direction
+	current_direction = current_direction.lerp(direction, delta * 10)  # Adjust the factor to control smoothness
 
-	# Update animation and walking/running flags.
-	if direction != Vector3.ZERO:
-		if !running and current_speed == RUN_SPEED:
+	# Movement speed determination
+	var current_speed = RUN_SPEED if Input.is_action_pressed("shift") else WALK_SPEED
+
+	# Movement and animation
+	if current_direction.length() > 0.01:
+		velocity.x = current_direction.x * current_speed
+		velocity.z = current_direction.z * current_speed
+
+		# Update walking/running status and animations
+		if not running and current_speed == RUN_SPEED:
 			running = true
 			walking = false
 			animation_player.play("Run")
-		elif !walking and current_speed == WALK_SPEED:
+		elif not walking and current_speed == WALK_SPEED:
 			walking = true
 			running = false
 			animation_player.play("Walk")
 	else:
+		velocity.x = 0
+		velocity.z = 0
 		if walking or running:
 			walking = false
 			running = false
 			animation_player.play("Idle")
 
-	# Apply movement
-	if direction != Vector3.ZERO:
-		# Convert the global direction to the character's local space using direct multiplication
-		var local_direction = global_transform.basis.inverse() * direction
-		velocity.x = local_direction.x * current_speed
-		velocity.z = local_direction.z * current_speed
+	# Rotation towards movement direction
+	if current_direction.length() > 0.01:
+		var target_rotation = atan2(-current_direction.x, -current_direction.z)
+		visuals.rotation.y = lerp_angle(visuals.rotation.y, target_rotation, 0.1)  # Adjust the factor for desired rotation smoothness
 
-		# Calculate the new forward direction for $Visuals, ignoring the vertical component
-		var new_forward = Vector3(local_direction.x, 0, local_direction.z).normalized()
-		
-		# Only update the visuals' rotation if there is significant horizontal movement
-		if new_forward.length() > 0.01:
-			# Adjust the angle calculation by adding 180 degrees to flip the direction
-			visuals.rotation_degrees.y = rad_to_deg(atan2(-new_forward.x, -new_forward.z))
-
-	else:
-		# Decelerate to a stop if no input is provided.
-		velocity.x = move_toward(velocity.x, 0, current_speed)
-		velocity.z = move_toward(velocity.z, 0, current_speed)
-
-	# Perform the movement.
+	# Apply movement with move_and_slide
 	move_and_slide()
