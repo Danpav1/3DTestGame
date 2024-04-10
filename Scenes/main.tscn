@@ -62,13 +62,13 @@ shader = SubResource("Shader_vm8eo")
 
 [node name="World" type="Node3D"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 12.457, 13.7882, 0)
-shadow_enabled = true
-directional_shadow_max_distance = 1000.0
-
 [node name="Map" type="Node3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 13, 0, 5)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Map"]
+transform = Transform3D(-1.73205, -0.866026, 0.5, 0, 1, 1.73205, -1, 1.5, -0.866025, -9.32059, 58.0237, -41.2306)
+layers = 3
+shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Map"]
 environment = SubResource("Environment_1jyd1")
@@ -147,8 +147,4 @@ material_override = ExtResource("6_v457f")
 size = Vector3(75, 8, 1)
 
 [node name="Player" parent="." instance=ExtResource("8_unfkl")]
-<<<<<<< HEAD
 transform = Transform3D(1, 0, 1.74845e-07, 0, 1, 0, -1.74845e-07, 0, 1, 0, 0.363832, 0)
-=======
-transform = Transform3D(-1, 0, -2.62268e-07, 0, 1, 0, 2.62268e-07, 0, -1, 0, 0.406029, 0)
->>>>>>> 2652451f6071b4515e0d156ce1b377cb6389a981
