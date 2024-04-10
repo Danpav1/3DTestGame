@@ -60,91 +60,93 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rcxal"]
 shader = SubResource("Shader_vm8eo")
 
-[node name="World" type="Node3D"]
+[node name="Main" type="Node3D"]
 
-[node name="Map" type="Node3D" parent="."]
+[node name="World" type="Node3D" parent="."]
+
+[node name="Map" type="Node3D" parent="World"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 13, 0, 5)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Map"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World/Map"]
 transform = Transform3D(-1.73205, -0.866026, 0.5, 0, 1, 1.73205, -1, 1.5, -0.866025, -9.32059, 58.0237, -41.2306)
 layers = 3
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Map"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World/Map"]
 environment = SubResource("Environment_1jyd1")
 
-[node name="Ground" type="CSGBox3D" parent="Map"]
+[node name="Ground" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.0706, -2.98023e-08, -12.2188)
 material_override = ExtResource("1_il118")
 use_collision = true
 size = Vector3(75, 1, 75)
 material = SubResource("StandardMaterial3D_8e04k")
 
-[node name="BoxPurple" type="CSGBox3D" parent="Map"]
+[node name="BoxPurple" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2, 0, 2.0617)
 material_override = ExtResource("3_mvdjr")
 use_collision = true
 size = Vector3(10, 2, 10)
 material = SubResource("StandardMaterial3D_aac3s")
 
-[node name="BoxOrange" type="CSGBox3D" parent="Map"]
+[node name="BoxOrange" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -10)
 material_override = ExtResource("4_a0ntj")
 use_collision = true
 size = Vector3(10, 4, 10)
 material = SubResource("StandardMaterial3D_silsu")
 
-[node name="BoxRed" type="CSGBox3D" parent="Map"]
+[node name="BoxRed" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -2.02584, 0, -24.7313)
 material_override = ExtResource("5_qoo3w")
 use_collision = true
 size = Vector3(10, 6, 10)
 material = SubResource("StandardMaterial3D_uj17f")
 
-[node name="Pillar1" type="CSGBox3D" parent="Map"]
+[node name="Pillar1" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.8228, 4, -34.0578)
 material_override = ExtResource("6_jt4q4")
 use_collision = true
 size = Vector3(2, 8, 2)
 material = SubResource("ShaderMaterial_rcxal")
 
-[node name="Pillar2" type="CSGBox3D" parent="Map"]
+[node name="Pillar2" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.947, 4, -34.0578)
 material_override = ExtResource("6_jt4q4")
 use_collision = true
 size = Vector3(2, 8, 2)
 
-[node name="Pillar3" type="CSGBox3D" parent="Map"]
+[node name="Pillar3" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -25.8737, 9.014, -34.0578)
 material_override = ExtResource("6_jt4q4")
 use_collision = true
 size = Vector3(2, 8, 2)
 
-[node name="Pillar4" type="CSGBox3D" parent="Map"]
+[node name="Pillar4" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(0.5, -0.707107, 0.5, 0.707107, -3.09086e-08, -0.707107, 0.5, 0.707107, 0.5, -33.6435, 1.3892, -15.0938)
 material_override = ExtResource("6_jt4q4")
 use_collision = true
 size = Vector3(2, 8, 2)
 
-[node name="Wall1" type="CSGBox3D" parent="Map"]
+[node name="Wall1" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 4, 25)
 material_override = ExtResource("6_v457f")
 size = Vector3(75, 8, 1)
 
-[node name="Wall2" type="CSGBox3D" parent="Map"]
+[node name="Wall2" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 4, -49.4151)
 material_override = ExtResource("6_v457f")
 size = Vector3(75, 8, 1)
 
-[node name="Wall3" type="CSGBox3D" parent="Map"]
+[node name="Wall3" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -63, 4, -12.0654)
 material_override = ExtResource("6_v457f")
 size = Vector3(75, 8, 1)
 
-[node name="Wall4" type="CSGBox3D" parent="Map"]
+[node name="Wall4" type="CSGBox3D" parent="World/Map"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 11, 4, -12.0654)
 material_override = ExtResource("6_v457f")
 size = Vector3(75, 8, 1)
 
-[node name="Player" parent="." instance=ExtResource("8_unfkl")]
+[node name="Player" parent="World" instance=ExtResource("8_unfkl")]
 transform = Transform3D(1, 0, 1.74845e-07, 0, 1, 0, -1.74845e-07, 0, 1, 0, 0.363832, 0)

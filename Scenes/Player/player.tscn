@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://ygywbckgaiu8"]
 
-[ext_resource type="Script" path="res://player2.gd" id="1_yir1n"]
+[ext_resource type="Script" path="res://Scripts/Player/player.gd" id="1_yir1n"]
 [ext_resource type="Script" path="res://Scripts/Player/Camera/Camera_pivot.gd" id="2_4ashw"]
 [ext_resource type="Shader" path="res://Shaders/outline.gdshader" id="4_q4xm1"]
 
