@@ -23,12 +23,7 @@ func _ready():
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
-		velocity.y -= gravity * delta
-	# Handle jump.
-	if Input.is_action_just_pressed("space") and is_on_floor:
-		velocity.y = JUMP_VELOCITY
-		animation_player.play("Jump")
-		
+		velocity.y -= gravity * delta	
 
 	# Use the camera's global transform to determine the forward and right vectors.
 	var forward = -camera.global_transform.basis.z.normalized()
