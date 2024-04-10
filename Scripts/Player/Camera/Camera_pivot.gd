@@ -4,11 +4,14 @@ extends Node3D
 
 # Offsets
 var position_offset: Vector3 = Vector3(0, 1, 0)  # The camera is 1 unit above the player
+<<<<<<< HEAD
 
 var mouse_sensitivity: float = 0.5
 var is_rotating: bool = false
 var snap_target_angle: float = 180.0  # Initialize to the desired starting angle
 var snap_speed: float = 5.0
+=======
+>>>>>>> 2652451f6071b4515e0d156ce1b377cb6389a981
 var follow_speed: float = 5.0
 var rotation_threshold: float = 1.0  # Threshold to prevent minor rotations
 
@@ -20,6 +23,7 @@ func _ready() -> void:
 		# Ensure the player faces the correct direction at start
 		player.rotation_degrees.y = snap_target_angle
 
+<<<<<<< HEAD
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_rotating:
 		# Update rotation based on mouse movement
@@ -44,6 +48,9 @@ func _process(delta: float) -> void:
 			player.rotation_degrees.y = lerp_angle(deg_to_rad(player.rotation_degrees.y), deg_to_rad(snap_target_angle), snap_speed * delta)
 			player.rotation_degrees.y = rad_to_deg(player.rotation_degrees.y)
 		
+=======
+func _process(delta: float) -> void:
+>>>>>>> 2652451f6071b4515e0d156ce1b377cb6389a981
 	# Follow the player with an offset
 	if player:
 		# Calculate the camera global position based on the player's position and the offsets
